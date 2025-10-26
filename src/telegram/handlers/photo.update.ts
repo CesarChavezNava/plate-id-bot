@@ -3,6 +3,7 @@ import { Ctx, On, Update } from 'nestjs-telegraf';
 import { Context } from 'telegraf';
 import { AccessVerifierGuard } from '../guards/access-verifier.guard';
 import { PhotoRecognizerAgent } from '../../agents/photo-recognizer.agent';
+import { MessageBuilder } from '../utils/message.utils';
 
 @Update()
 export class PhotoUpdate {
@@ -18,35 +19,26 @@ export class PhotoUpdate {
     const fileId = bestPhoto.file_id;
 
     await ctx.telegram.sendChatAction(ctx.chat.id, 'typing');
+    const actionRefresher = setInterval(() => {
+      ctx.telegram.sendChatAction(ctx.chat.id, 'typing').catch((e) => {
+        console.error('Error refreshing chat action:', e.message);
+      });
+    }, 4500);
 
     try {
       const fileLink = await ctx.telegram.getFileLink(fileId);
       const fileUrl = fileLink.href;
 
       const agentResponse = await this.agent.runAgent(fileUrl, userId);
-      const jsonResponse = JSON.parse(agentResponse);
+      clearInterval(actionRefresher);
 
-      if (
-        jsonResponse.dish_name === 'UNRECOGNIZED' ||
-        jsonResponse.dish_name === 'GENERIC_FOOD'
-      ) {
-        await ctx.reply('⚠️ The food could not be recognized in the image.');
-        return;
-      }
-      if (jsonResponse.dish_name === 'MANY_DISHES') {
-        await ctx.reply(
-          '⚠️ The image contains multiple dishes. Please upload an image with a single dish.',
-        );
-        return;
-      }
+      const replyMessage =
+        MessageBuilder.buildCompatibilityReplyMessage(agentResponse);
 
-      const contentCompatibility = '⭐'.repeat(
-        Math.max(1, Math.min(5, Math.round(jsonResponse.compatibility_rating))),
-      );
-
-      await ctx.reply(`🍽️ Personalized recommendation for ${jsonResponse.dish_name}: \n
-        ${contentCompatibility}`);
+      await ctx.reply(replyMessage, { parse_mode: 'Markdown' });
     } catch (err) {
+      clearInterval(actionRefresher);
+
       console.error('Error while processing photo for agent:', err);
       await ctx.reply('⚠️ Error while processing photo for Agent.');
     }

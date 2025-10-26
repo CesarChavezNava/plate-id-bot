@@ -113,3 +113,5 @@ The bot is designed to be simple and intuitive. You interact with it through a s
 Here is an example of the bot in action:
 
 ![Example](images/example.jpg)
+
+![Example](images/example2.jpg)
