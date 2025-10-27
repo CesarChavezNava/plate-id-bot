@@ -12,14 +12,8 @@ export class RatedFoodSearcherUseCase {
   ) {}
 
   async execute(input: RatedFoodSearcherInput): Promise<FoodRating[]> {
-    if (input.rating === 'dislikes') {
-      return await this.foodRatingRepository.search(
-        new FoodRatingCriteria(input.userId, 'dislike'),
-      );
-    }
-
     return await this.foodRatingRepository.search(
-      new FoodRatingCriteria(input.userId, 'like'),
+      new FoodRatingCriteria(input.userId, input.allergies),
     );
   }
 }

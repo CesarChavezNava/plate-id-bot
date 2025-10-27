@@ -4,57 +4,49 @@ import { Context } from 'telegraf';
 import { AccessVerifierGuard } from '../guards/access-verifier.guard';
 import { RatedFoodSearcherUseCase } from '@modules/profile/application/rated-food-searcher/rated-food-searcher.usecase';
 import { RatedFoodSearcherInput } from '@modules/profile/application/rated-food-searcher/rated-food-searcher.input';
-import { FoodAllergiesSearcherUseCase } from '@modules/profile/application/food-allergies-searcher/food-allergies-searcher.usecase';
-import { FoodAllergiesSearcherInput } from '@modules/profile/application/food-allergies-searcher/food-allergies-searcher.input';
+import { RequestUtils } from '../utils/request.utils';
 
 @Update()
 export class ListUpdate {
-  constructor(
-    private readonly ratedDishesSearcher: RatedFoodSearcherUseCase,
-    private readonly foodAllergiesSearcher: FoodAllergiesSearcherUseCase,
-  ) {}
+  constructor(private readonly ratedDishesSearcher: RatedFoodSearcherUseCase) {}
 
   @UseGuards(AccessVerifierGuard)
   @Command('list')
   async handleHelp(@Ctx() ctx: Context) {
     try {
       const fullText = ctx.message['text'];
-      const parts = fullText.split(' ');
-      const nameList = parts.slice(1).join(' ').trim().toLowerCase();
-
-      if (!nameList) {
-        return ctx.reply('Please specify a filter. Example: /list likes');
-      }
-
-      if (
-        nameList !== 'likes' &&
-        nameList !== 'dislikes' &&
-        nameList !== 'allergies'
-      ) {
-        return ctx.reply(
-          'Please specify a correct filter. Example: /list likes',
-        );
-      }
+      const parameters = RequestUtils.getParameters(fullText, 1);
+      const nameList = parameters[0].toLowerCase();
 
       const userId = ctx.from.id.toString();
 
       if (nameList === 'allergies') {
-        const allergies = await this.foodAllergiesSearcher.execute(
-          new FoodAllergiesSearcherInput(userId),
+        const allergies = await this.ratedDishesSearcher.execute(
+          new RatedFoodSearcherInput(userId, true),
         );
         const allergyList = allergies
-          .map((allergy) => `- ${allergy.foodName} 🍽️`)
+          .map((allergy) => `🍽️ ${allergy.food.name}`)
           .join('\n');
         await ctx.reply(`These are your allergies:\n${allergyList}`);
-      } else {
-        const ratingDishes = await this.ratedDishesSearcher.execute(
-          new RatedFoodSearcherInput(userId, nameList),
-        );
-        const dishList = ratingDishes
-          .map((dish) => `- ${dish.foodName} 🍽️`)
-          .join('\n');
-        await ctx.reply(`These are your dishes:\n${dishList}`);
+        return;
       }
+
+      if (nameList === 'food') {
+        const ratingFood = await this.ratedDishesSearcher.execute(
+          new RatedFoodSearcherInput(userId),
+        );
+        const foodList = ratingFood
+          .map(
+            (ratingFood) => `🍽️ ${ratingFood.food.name} 📈 ${ratingFood.score}`,
+          )
+          .join('\n');
+        await ctx.reply(`These is your food list:\n${foodList}`);
+        return;
+      }
+
+      await ctx.reply(
+        'Please specify a correct list name. Example: /list food or /list allergies',
+      );
     } catch (err) {
       console.error('Internal error while listing:', err);
       await ctx.reply('⚠️ Internal error while listing.');

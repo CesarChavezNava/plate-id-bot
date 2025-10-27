@@ -101,13 +101,11 @@ Example UNRECOGNIZED: {"recognitionCode": "UNRECOGNIZED"}`,
         new ProfileFinderInput(sessionId),
       );
 
-      const likes = profile.likes.map((like) => like.foodName);
-      const dislikes = profile.dislikes.map((dislike) => dislike.foodName);
-      const allergies = profile.allergies.map((allergy) => allergy.foodName);
+      const food = profile.food.map((f) => `${f.food.name} (${f.score})`);
+      const allergies = profile.allergies.map((allergy) => allergy.food.name);
 
       const profileContent = `User Profile for Compatibility Analysis:
-      - likes: ${likes.join(', ') || 'None'}
-      - dislikes: ${dislikes.join(', ') || 'None'}
+      - food: ${food.join(', ') || 'None'}
       - allergies: ${allergies.join(', ') || 'None'}
       `;
 

@@ -1,31 +1,26 @@
-import { FoodAllergyAdderUseCase } from '@modules/profile/application/food-allergy-adder/food-allergy-adder.usecase';
+import { AllergyAdderUseCase } from '@modules/profile/application/allergy-adder/allergy-adder.usecase';
 import { UseGuards } from '@nestjs/common';
 import { Command, Ctx, Update } from 'nestjs-telegraf';
 import { AccessVerifierGuard } from '../guards/access-verifier.guard';
 import { Context } from 'telegraf';
-import { FoodAllergyAdderInput } from '@modules/profile/application/food-allergy-adder/food-allergy-adder.input';
+import { AllergyAdderInput } from '@modules/profile/application/allergy-adder/allergy-adder.input';
+import { RequestUtils } from '../utils/request.utils';
 
 @Update()
 export class AllergyUpdate {
-  constructor(
-    private readonly foodAllergyAdderUseCase: FoodAllergyAdderUseCase,
-  ) {}
+  constructor(private readonly foodAllergyAdderUseCase: AllergyAdderUseCase) {}
 
   @UseGuards(AccessVerifierGuard)
   @Command('allergy')
   async handleHelp(@Ctx() ctx: Context) {
     try {
       const fullText = ctx.message['text'];
-      const parts = fullText.split(' ');
-      const foodName = parts.slice(1).join(' ').trim();
-
-      if (!foodName) {
-        return ctx.reply('Please specify a food. Example: /allergy Nuez');
-      }
+      const parameters = RequestUtils.getParameters(fullText, 1);
+      const foodName = parameters[0];
 
       const userId = ctx.from.id.toString();
       await this.foodAllergyAdderUseCase.execute(
-        new FoodAllergyAdderInput(userId, foodName),
+        new AllergyAdderInput(userId, foodName),
       );
 
       await ctx.reply(`👎 Got it! You've added allergy: ${foodName}`);

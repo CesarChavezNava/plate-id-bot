@@ -1,6 +1,6 @@
 import { FoodAllergiesSearcherUseCase } from '@modules/profile/application/food-allergies-searcher/food-allergies-searcher.usecase';
 import { FoodAllergyRepository } from '@modules/profile/domain/repositories/food-allergy.repository';
-import { FoodAllergy } from '@modules/profile/domain/entities/food-allergy';
+import { Allergy } from '@modules/profile/domain/entities/allergy';
 import { FoodAllergyCriteria } from '@modules/profile/domain/entities/food-allergy-criteria';
 import { Test } from '@nestjs/testing';
 
@@ -32,8 +32,8 @@ describe('FoodAllergiesSearcherUseCase', () => {
   it('should search for food allergies and return them', async () => {
     const input = { userId: 'user-1' };
     const expectedAllergies = [
-      new FoodAllergy('user-1', 'Peanuts'),
-      new FoodAllergy('user-1', 'Shellfish'),
+      new Allergy('user-1', 'Peanuts'),
+      new Allergy('user-1', 'Shellfish'),
     ];
 
     (foodAllergyRepository.search as jest.Mock).mockResolvedValue(

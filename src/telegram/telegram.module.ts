@@ -7,11 +7,10 @@ import { ProfileModule } from '@modules/profile/profile.module';
 import { StartUpdate } from './handlers/start.update';
 import { RegisterUpdate } from './handlers/register.update';
 import { HelpUpdate } from './handlers/help.update';
-import { LikeUpdate } from './handlers/like.update';
-import { DislikeUpdate } from './handlers/dislike.update';
 import { AllergyUpdate } from './handlers/allergy.update';
 import { ListUpdate } from './handlers/list.update';
 import { PhotoUpdate } from './handlers/photo.update';
+import { FoodUpdate } from './handlers/food.update';
 
 @Module({
   imports: [
@@ -30,9 +29,8 @@ import { PhotoUpdate } from './handlers/photo.update';
     StartUpdate,
     HelpUpdate,
     RegisterUpdate,
-    LikeUpdate,
-    DislikeUpdate,
     AllergyUpdate,
+    FoodUpdate,
     ListUpdate,
     PhotoUpdate,
   ],

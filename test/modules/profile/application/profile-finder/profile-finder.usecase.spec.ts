@@ -2,7 +2,7 @@ import { ProfileFinderUseCase } from '@modules/profile/application/profile-finde
 import { ProfileRepository } from '@modules/profile/domain/repositories/profile.repository';
 import { Profile } from '@modules/profile/domain/entities/profile';
 import { FoodRating } from '@modules/profile/domain/entities/food-rating';
-import { FoodAllergy } from '@modules/profile/domain/entities/food-allergy';
+import { Allergy } from '@modules/profile/domain/entities/allergy';
 import { ProfileNotFoundError } from '@modules/profile/domain/errors/profile-not-found.error';
 import { ProfileFinderOutput } from '@modules/profile/application/profile-finder/profile.finder.output';
 import { Test } from '@nestjs/testing';
@@ -32,7 +32,7 @@ describe('ProfileFinderUseCase', () => {
     const userId = 'user-1';
     const likes = [new FoodRating(userId, 'Pizza', 'like')];
     const dislikes = [new FoodRating(userId, 'Broccoli', 'dislike')];
-    const allergies = [new FoodAllergy(userId, 'Peanuts')];
+    const allergies = [new Allergy(userId, 'Peanuts')];
     const profile = new Profile(userId, [...likes, ...dislikes], allergies);
 
     (profileRepository.find as jest.Mock).mockResolvedValue(profile);

@@ -1,13 +1,27 @@
-import { RatingType } from '@modules/profile/domain/types/rating.type';
-import { generateFoodId } from '@modules/profile/domain/utils/id-generator.utils';
+import { Food } from './food';
 
 export class FoodRating {
-  public readonly foodId: string;
-  constructor(
+  private constructor(
     public readonly userId: string,
-    public readonly foodName: string,
-    public readonly rating: RatingType,
-  ) {
-    this.foodId = generateFoodId(foodName);
+    public readonly score: number,
+    public readonly food: Food,
+  ) {}
+
+  static create(userId: string, score: number, food: Food): FoodRating {
+    const minScore = 1;
+    const maxScore = 5;
+
+    if (score < minScore) {
+      score = minScore;
+    }
+
+    if (score > maxScore) {
+      score = maxScore;
+    }
+    return new FoodRating(userId, score, food);
+  }
+
+  static new(userId: string, score: number, food: Food): FoodRating {
+    return new FoodRating(userId, score, food);
   }
 }

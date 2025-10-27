@@ -1,4 +1,4 @@
-export class DishLikerInput {
+export class AllergyAdderInput {
   constructor(
     public userId: string,
     public foodName: string,

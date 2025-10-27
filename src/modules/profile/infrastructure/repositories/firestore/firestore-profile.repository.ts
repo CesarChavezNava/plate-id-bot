@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { firestoreCollections } from '@modules/config/firestore/firestore-collections';
 import { FirestoreService } from '@modules/config/firestore/firestore.service';
-import { FoodAllergy } from '@modules/profile/domain/entities/food-allergy';
 import { Profile } from '@modules/profile/domain/entities/profile';
 import { FoodRating } from '@modules/profile/domain/entities/food-rating';
 import { ProfileRepository } from '@modules/profile/domain/repositories/profile.repository';
+import { Food } from '@modules/profile/domain/entities/food';
 
 @Injectable()
 export class FirestoreProfileRepository implements ProfileRepository {
@@ -19,20 +19,28 @@ export class FirestoreProfileRepository implements ProfileRepository {
     if (!profileSnapshot.exists) return null;
 
     const food = [];
+    const allergies = [];
     const foodDocs = await profileSnapshot.ref
-      .collection(firestoreCollections.dishes)
+      .collection(firestoreCollections.food)
       .get();
 
     foodDocs.forEach((doc) => {
-      food.push(new FoodRating(userId, doc.data().foodName, doc.data().rating));
-    });
-
-    const allergies = [];
-    const allergyDocs = await profileSnapshot.ref
-      .collection(firestoreCollections.allergies)
-      .get();
-    allergyDocs.forEach((doc) => {
-      allergies.push(new FoodAllergy(userId, doc.data().foodName));
+      if (doc.data().score === 0)
+        allergies.push(
+          FoodRating.new(
+            userId,
+            doc.data().score,
+            Food.new(doc.id, doc.data().foodName),
+          ),
+        );
+      else
+        food.push(
+          FoodRating.new(
+            userId,
+            doc.data().score,
+            Food.new(doc.id, doc.data().foodName),
+          ),
+        );
     });
 
     const profile = new Profile(userId, food, allergies);
