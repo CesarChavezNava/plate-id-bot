@@ -11,6 +11,8 @@ import { AllergyUpdate } from './handlers/allergy.update';
 import { ListUpdate } from './handlers/list.update';
 import { PhotoUpdate } from './handlers/photo.update';
 import { FoodUpdate } from './handlers/food.update';
+import { LanguageUpdate } from './handlers/language.update';
+import { SettingModule } from '@modules/setting/setting.module';
 
 @Module({
   imports: [
@@ -23,6 +25,7 @@ import { FoodUpdate } from './handlers/food.update';
     }),
     AuthModule,
     ProfileModule,
+    SettingModule,
     AgentModule,
   ],
   providers: [
@@ -32,6 +35,7 @@ import { FoodUpdate } from './handlers/food.update';
     AllergyUpdate,
     FoodUpdate,
     ListUpdate,
+    LanguageUpdate,
     PhotoUpdate,
   ],
   exports: [],
