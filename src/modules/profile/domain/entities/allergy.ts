@@ -5,6 +5,6 @@ export class Allergy {
   private constructor() {}
 
   static create(userId: string, food: Food): FoodRating {
-    return FoodRating.create(userId, 0, food);
+    return FoodRating.new(userId, 0, food);
   }
 }

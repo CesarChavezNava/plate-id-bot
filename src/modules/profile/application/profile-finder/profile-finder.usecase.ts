@@ -13,7 +13,6 @@ export class ProfileFinderUseCase {
 
   async execute(input: ProfileFinderInput): Promise<Profile> {
     const profile = await this.profileRepository.find(input.userId);
-
     if (!profile) {
       throw new ProfileNotFoundError(input.userId);
     }

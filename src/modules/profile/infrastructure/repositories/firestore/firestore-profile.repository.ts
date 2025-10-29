@@ -30,7 +30,7 @@ export class FirestoreProfileRepository implements ProfileRepository {
           FoodRating.new(
             userId,
             doc.data().score,
-            Food.new(doc.id, doc.data().foodName),
+            Food.new(doc.id, doc.data().name),
           ),
         );
       else
@@ -38,7 +38,7 @@ export class FirestoreProfileRepository implements ProfileRepository {
           FoodRating.new(
             userId,
             doc.data().score,
-            Food.new(doc.id, doc.data().foodName),
+            Food.new(doc.id, doc.data().name),
           ),
         );
     });

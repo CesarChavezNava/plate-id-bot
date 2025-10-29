@@ -108,7 +108,7 @@ The bot is designed to be simple and intuitive. You interact with it through a s
 1.  **Start and Register**: Begin by interacting with the bot using the `/start` command, and register yourself with `/register`.
 2.  **Send a Photo**: Take a picture of your food and send it directly to the bot.
 3.  **Get an Answer**: The bot will analyze the image and tell you which dish it has identified and how compatible you are based on your preferences.
-4.  **Manage Preferences**: Use commands like `/allergy <item>`, `/like <item>`, and `/dislike <item>`to add food allergies or `/list` to see your preferences.
+4.  **Manage Preferences**: Use commands like `/allergy <item>` or `/food <item> | <score>` to add foods or allergies to your profile.
 
 Here is an example of the bot in action:
 
