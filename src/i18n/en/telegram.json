@@ -1,0 +1,32 @@
+{
+  "ALLERGY": {
+    "ADDED": "👎 Got it! You've added allergy: {{foodName}}",
+    "ERROR": "⚠️ Internal error while adding allergy."
+  },
+  "FOOD": {
+    "ADDED": "✔️🍽️ Got it! You've added the food: {{foodName}}",
+    "FORMAT_ERROR": "⚠️ Please specify a food with score separated by \"|\". Example: /food  Almond | 5",
+    "ERROR": "❌ Internal error while adding food."
+  },
+  "HELP": {
+    "COMMANDS": "/help: Shows this help list. \n/register: Request access to start using the bot. \n/like [food name]: Tell me a dish that you love. \n/list likes: View my favorite dishes. \n/dislike [food name]: Tell me a dish that you do NOT like. \n/list dislikes: View the dishes that I don't like. \n/allergy [food name]: Add a food you are allergic to. \n/list allergies: View my list of allergen foods."
+  },
+  "LIST": {
+    "ALLERGIES": "These are your allergies:",
+    "FOOD": "These is your food list:",
+    "FORMAT_ERROR": "⚠️ Please specify a correct list name. Example: /list food or /list allergies",
+    "ERROR": "⚠️ Internal error while listing."
+  },
+  "REGISTER": {
+    "RESPONSE": "Registration request submitted! 📝\nWe have received your request to use PlateID Bot.\nYour access is now pending administrator approval. We will notify you shortly once your account has been reviewed and activated.\nThank you for your patience! 😊",
+    "ERROR": "⚠️ Internal error while registering."
+  },
+  "PHOTO": {
+    "NO_CAPTION": "⚠️ The photo must have a caption.",
+    "CAPTION_NOT_RECOGNIZED": "⚠️ The caption is not recognized.",
+    "ERROR": "⚠️ Error while processing photo for Agent."
+  },
+  "START": {
+    "WELCOME": "Welcome to PlateID Bot! 🍔🥗🤖\nI'm your AI assistant that helps you discover whether you'll love (or hate) a new food based on your tastes, dislikes, and your allergies!\n👉 Get started right away with the command: /register\nDo you have questions about how it works? Use /help for all the details. Happy eating!"
+  }
+}

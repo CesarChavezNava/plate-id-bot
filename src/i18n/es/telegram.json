@@ -1,0 +1,32 @@
+{
+  "ALLERGY": {
+    "ADDED": "👎 ¡Listo! He agregado tu alergia: {{foodName}}",
+    "ERROR": "⚠️ Oops, hubo un error al agregar la alergia."
+  },
+  "FOOD": {
+    "ADDED": "✔️🍽️ ¡Perfecto! He agregado el platillo: {{foodName}}",
+    "FORMAT_ERROR": "⚠️ Por favor indica el platillo y su puntaje separados por \"|\". Ejemplo: /food Almendra | 5",
+    "ERROR": "❌ Oops, ocurrió un error al agregar el platillo."
+  },
+  "HELP": {
+    "COMMANDS": "/help: Muestra esta lista de comandos.\n/register: Solicita acceso para empezar a usar el bot.\n/like [platillo]: Indica un platillo que te encanta.\n/list likes: Ver tus platillos favoritos.\n/dislike [platillo]: Indica un platillo que NO te gusta.\n/list dislikes: Ver los platillos que no te gustan.\n/allergy [alimento]: Agrega un alimento al que eres alérgico.\n/list allergies: Ver tu lista de alergias."
+  },
+  "LIST": {
+    "ALLERGIES": "Estas son tus alergias:",
+    "FOOD": "Esta es tu lista de platillos:",
+    "FORMAT_ERROR": "⚠️ Por favor indica un nombre de lista válido. Ejemplo: /list food o /list allergies",
+    "ERROR": "⚠️ Oops, hubo un error al listar los elementos."
+  },
+  "REGISTER": {
+    "RESPONSE": "¡Solicitud de registro enviada! 📝\nRecibimos tu solicitud para usar PlateID Bot.\nTu acceso está pendiente de aprobación del administrador. Te avisaremos cuando tu cuenta esté lista.\n¡Gracias por tu paciencia! 😊",
+    "ERROR": "⚠️ Oops, ocurrió un error al registrar tu solicitud."
+  },
+  "PHOTO": {
+    "NO_CAPTION": "⚠️ La foto debe tener un pie de foto.",
+    "CAPTION_NOT_RECOGNIZED": "⚠️ No pude reconocer el pie de foto.",
+    "ERROR": "⚠️ Oops, hubo un error al procesar la foto."
+  },
+  "START": {
+    "WELCOME": "¡Bienvenido a PlateID Bot! 🍔🥗🤖\nSoy tu asistente AI que te ayudará a descubrir si un nuevo platillo te encantará o no, según tus gustos, disgustos y alergias.\n👉 Comienza usando: /register\n¿Tienes dudas? Usa /help para todos los detalles. ¡A disfrutar la comida!"
+  }
+}

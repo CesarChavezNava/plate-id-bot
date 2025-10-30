@@ -34,7 +34,11 @@ export class FoodMenuAnalyzerAgent {
     });
   }
 
-  async runAgent(fileUrl: string, sessionId: string): Promise<string> {
+  async runAgent(
+    fileUrl: string,
+    sessionId: string,
+    language: string,
+  ): Promise<string> {
     try {
       const { base64Image, mimeType } = await downloadAndEncodeImage(fileUrl);
 
@@ -53,11 +57,11 @@ export class FoodMenuAnalyzerAgent {
         `;
 
       const messages = [
-        new SystemMessage(prompt.system('spanish')),
+        new SystemMessage(prompt.system(language)),
         new HumanMessage([
           {
             type: 'text',
-            text: prompt.human('spanish', profileContent),
+            text: prompt.human(language, profileContent),
           },
           {
             type: 'image_url',

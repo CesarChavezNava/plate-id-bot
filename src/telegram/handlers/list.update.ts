@@ -1,10 +1,10 @@
 import { UseGuards } from '@nestjs/common';
 import { Command, Ctx, Update } from 'nestjs-telegraf';
-import { Context } from 'telegraf';
 import { AccessVerifierGuard } from '../guards/access-verifier.guard';
 import { RatedFoodSearcherUseCase } from '@modules/profile/application/rated-food-searcher/rated-food-searcher.usecase';
 import { RatedFoodSearcherInput } from '@modules/profile/application/rated-food-searcher/rated-food-searcher.input';
 import { RequestUtils } from '../utils/request.utils';
+import { TelegrafI18nContext } from 'nestjs-telegraf-i18n';
 
 @Update()
 export class ListUpdate {
@@ -12,7 +12,7 @@ export class ListUpdate {
 
   @UseGuards(AccessVerifierGuard)
   @Command('list')
-  async handleHelp(@Ctx() ctx: Context) {
+  async handleHelp(@Ctx() ctx: TelegrafI18nContext) {
     try {
       const fullText = ctx.message['text'];
       const parameters = RequestUtils.getParameters(fullText, 1);
@@ -27,7 +27,7 @@ export class ListUpdate {
         const allergyList = allergies
           .map((allergy) => `🍽️ ${allergy.food.name}`)
           .join('\n');
-        await ctx.reply(`These are your allergies:\n${allergyList}`);
+        await ctx.reply(`${ctx.t('telegram.LIST.ALLERGIES')}\n${allergyList}`);
         return;
       }
 
@@ -40,16 +40,14 @@ export class ListUpdate {
             (ratingFood) => `🍽️ ${ratingFood.food.name} 📈 ${ratingFood.score}`,
           )
           .join('\n');
-        await ctx.reply(`These is your food list:\n${foodList}`);
+        await ctx.reply(`${ctx.t('telegram.LIST.FOOD')}:\n${foodList}`);
         return;
       }
 
-      await ctx.reply(
-        'Please specify a correct list name. Example: /list food or /list allergies',
-      );
+      await ctx.reply(ctx.t('telegram.LIST.FORMAT_ERROR'));
     } catch (err) {
       console.error('Internal error while listing:', err);
-      await ctx.reply('⚠️ Internal error while listing.');
+      await ctx.reply(ctx.t('telegram.LIST.ERROR'));
     }
   }
 }

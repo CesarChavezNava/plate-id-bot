@@ -1,11 +1,11 @@
 import z from 'zod/v3';
 import { UseGuards } from '@nestjs/common';
 import { Command, Ctx, Update } from 'nestjs-telegraf';
-import { Context } from 'telegraf';
 import { AccessVerifierGuard } from '../guards/access-verifier.guard';
 import { RequestUtils } from '../utils/request.utils';
 import { FoodRaterUseCase } from '@modules/profile/application/food-rater/food-rater.usecase';
 import { FoodRaterInput } from '@modules/profile/application/food-rater/food-rater.input';
+import { TelegrafI18nContext } from 'nestjs-telegraf-i18n';
 
 const FoodSchema = z.object({
   name: z.string(),
@@ -18,7 +18,7 @@ export class FoodUpdate {
 
   @UseGuards(AccessVerifierGuard)
   @Command('food')
-  async handleHelp(@Ctx() ctx: Context) {
+  async handleHelp(@Ctx() ctx: TelegrafI18nContext) {
     try {
       const fullText = ctx.message['text'];
       const parameters = RequestUtils.getParameters(fullText, 2);
@@ -33,18 +33,18 @@ export class FoodUpdate {
         new FoodRaterInput(userId, food.name, food.score),
       );
 
-      await ctx.reply(`✔️🍽️ Got it! You've added the food: ${food.name}`);
+      await ctx.reply(
+        ctx.t('telegram.FOOD.ADDED').replace('{{foodName}}', food.name),
+      );
     } catch (err) {
       console.error('Internal error while adding food:', err);
 
       if (err instanceof z.ZodError) {
-        await ctx.reply(
-          '⚠️ Please specify a food with score separated by "|". Example: /food Nuez | 5',
-        );
+        await ctx.reply(ctx.t('telegram.FOOD.FORMAT_ERROR'));
         return;
       }
 
-      await ctx.reply('❌ Internal error while adding food.');
+      await ctx.reply(ctx.t('telegram.FOOD.ERROR'));
     }
   }
 }

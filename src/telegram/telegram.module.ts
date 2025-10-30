@@ -11,21 +11,31 @@ import { AllergyUpdate } from './handlers/allergy.update';
 import { ListUpdate } from './handlers/list.update';
 import { PhotoUpdate } from './handlers/photo.update';
 import { FoodUpdate } from './handlers/food.update';
-import { LanguageUpdate } from './handlers/language.update';
-import { SettingModule } from '@modules/setting/setting.module';
+import {
+  TelegrafI18nModule,
+  TelegrafI18nMiddlewareProvider,
+  TelegrafI18nContext,
+} from 'nestjs-telegraf-i18n';
 
 @Module({
   imports: [
+    TelegrafI18nModule,
     ConfigModule.forRoot(),
     TelegrafModule.forRootAsync({
+      inject: [TelegrafI18nMiddlewareProvider],
       imports: [ConfigModule],
-      useFactory: () => ({
+      useFactory: (
+        telegrafI18nMiddlewareProvider: TelegrafI18nMiddlewareProvider,
+      ) => ({
         token: process.env.TELEGRAM_TOKEN,
+        options: {
+          contextType: TelegrafI18nContext,
+        },
+        middlewares: [telegrafI18nMiddlewareProvider.telegrafI18nMiddleware],
       }),
     }),
     AuthModule,
     ProfileModule,
-    SettingModule,
     AgentModule,
   ],
   providers: [
@@ -35,7 +45,6 @@ import { SettingModule } from '@modules/setting/setting.module';
     AllergyUpdate,
     FoodUpdate,
     ListUpdate,
-    LanguageUpdate,
     PhotoUpdate,
   ],
   exports: [],

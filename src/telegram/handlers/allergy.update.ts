@@ -2,9 +2,9 @@ import { AllergyAdderUseCase } from '@modules/profile/application/allergy-adder/
 import { UseGuards } from '@nestjs/common';
 import { Command, Ctx, Update } from 'nestjs-telegraf';
 import { AccessVerifierGuard } from '../guards/access-verifier.guard';
-import { Context } from 'telegraf';
 import { AllergyAdderInput } from '@modules/profile/application/allergy-adder/allergy-adder.input';
 import { RequestUtils } from '../utils/request.utils';
+import { TelegrafI18nContext } from 'nestjs-telegraf-i18n';
 
 @Update()
 export class AllergyUpdate {
@@ -12,7 +12,7 @@ export class AllergyUpdate {
 
   @UseGuards(AccessVerifierGuard)
   @Command('allergy')
-  async handleHelp(@Ctx() ctx: Context) {
+  async handleHelp(@Ctx() ctx: TelegrafI18nContext) {
     try {
       const fullText = ctx.message['text'];
       const parameters = RequestUtils.getParameters(fullText, 1);
@@ -23,10 +23,12 @@ export class AllergyUpdate {
         new AllergyAdderInput(userId, foodName),
       );
 
-      await ctx.reply(`👎 Got it! You've added allergy: ${foodName}`);
+      await ctx.reply(
+        ctx.t('telegram.ALLERGY.ADDED').replace('{{foodName}}', foodName),
+      );
     } catch (err) {
       console.error('Internal error while adding allergy:', err);
-      await ctx.reply('⚠️ Internal error while adding allergy.');
+      await ctx.reply(ctx.t('telegram.ALLERGY.ERROR'));
     }
   }
 }
