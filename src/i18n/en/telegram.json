@@ -9,7 +9,7 @@
     "ERROR": "❌ Internal error while adding food."
   },
   "HELP": {
-    "COMMANDS": "/help: Shows this help list. \n/register: Request access to start using the bot. \n/like [food name]: Tell me a dish that you love. \n/list likes: View my favorite dishes. \n/dislike [food name]: Tell me a dish that you do NOT like. \n/list dislikes: View the dishes that I don't like. \n/allergy [food name]: Add a food you are allergic to. \n/list allergies: View my list of allergen foods."
+    "COMMANDS": "/help: Shows this help list. \n/register: Request access to start using the bot. \n/food [food name] | [score]: Rate a dish from 1 (hate) to 5 (love). \n/list food: View all the dishes you've rated with their scores. \n/allergy [food name]: Add a food you are allergic to. \n/list allergies: View my list of allergen foods."
   },
   "LIST": {
     "ALLERGIES": "These are your allergies:",

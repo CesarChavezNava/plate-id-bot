@@ -1,117 +1,206 @@
+<div align="center">
+  <img src="./images/logo.jpg" alt="PlateID Bot Logo">
+</div>
+
 # PlateID Bot
 
-<div style="text-align: center">
-  <img src="images/logo.jpg" alt="Descripción de la imagen" width="300" />
-</div><br>
+A Telegram bot that recognizes dishes from photos, lets users rate them, and manage food preferences and allergies.
 
-A Telegram bot designed to recognize dishes from photos, allowing users to rate them and manage their food preferences and allergies. The bot uses AI to identify the contents of a meal from an image.
+## Quick overview
+
+- Built with NestJS. Uses Firestore for persistence and AI agents for photo recognition.
+- Main user interactions happen through Telegram commands and photo uploads.
 
 ## Features
 
-- **User Registration**: Simple registration process via Telegram commands.
-- **Photo-based Dish Recognition**: Upload a photo of a meal, and the bot will identify the dish.
-- **Dish Rating**: Users can "like" or "dislike" dishes.
-- **Allergy Management**: Users can add and list their food allergies.
-- **Personalized Lists**: View lists of liked, disliked, and rated dishes.
+- Register and manage a user profile
+- Send a photo to identify a dish or menu
+- Rate foods (like/dislike)
+- Manage allergies and view lists of liked/disliked items
+
+## Prerequisites
+
+- Node.js v20+ and NPM or Yarn
+- A Telegram bot token (get one from BotFather)
+- (Optional) Google Cloud Firestore credentials (service account JSON) to persist profiles
+- (Optional) OpenAI API key for the photo recognition agent
+
+## Quick start
+
+1. Clone the repo and install dependencies:
+
+```powershell
+git clone <repository-url>
+cd plateid-bot
+npm install
+```
+
+2. Create a `.env` file in the project root and add required variables. Minimal example:
+
+```env
+# Telegram
+TELEGRAM_BOT_TOKEN=your_telegram_bot_token
+
+# OpenAI
+OPENAI_API_KEY=your_openai_api_key
+
+# GCP
+GOOGLE_APPLICATION_CREDENTIALS=path/to/service-account.json
+```
+
+3. Run in development mode:
+
+```powershell
+npm run start:dev
+```
+
+Or build & run production:
+
+```powershell
+npm run build
+npm run start:prod
+```
+
+Run tests:
+
+```powershell
+npm run test
+```
 
 ## Architecture
 
-This project is built with **NestJS** and follows the principles of **Hexagonal Architecture (Ports and Adapters)** and **Domain-Driven Design (DDD)**. This creates a clean separation of concerns, making the application easier to maintain, test, and scale.
+The project follows a modular architecture based on [NestJS](https://nestjs.com/), organized into the following main components:
 
-The codebase is organized into modules, with each business context (like `auth` or `profile`) containing three main layers:
+- **Agents (`src/agents/`)**: Encapsulate the logic for dish recognition and menu analysis.
+- **Modules (`src/modules/`)**: Separate functionalities such as authentication, user profile, configuration, and shared utilities.
+- **Internationalization (`src/i18n/`)**: Translation files to support multiple languages.
+- **Telegram (`src/telegram/`)**: Implements integration and command handling for the Telegram bot.
+- **Domain & Application**: Each module contains entities, use cases, repositories, and specific utilities to maintain separation of concerns.
 
-- `domain`: This is the core of the application. It contains the business logic, entities, value objects, and repository interfaces. It is completely independent of any external frameworks or technologies.
-- `application`: This layer contains the application-specific use cases (e.g., `UserRegisterer`, `DishLiker`). It orchestrates the domain logic to fulfill specific user actions. It defines the "ports" that the outer layers connect to.
-- `infrastructure`: This layer contains the implementation details and "adapters" for external systems. It includes:
-  - **Telegram Handlers**: The primary entry point for user interaction, using `nestjs-telegraf`.
-  - **Database Repositories**: Concrete implementations of the domain's repository interfaces, using **Google Firestore** for data persistence.
-  - **AI Agents**: Connectors to external AI services (like OpenAI via LangChain) for tasks like photo recognition.
+This structure facilitates scalability, maintainability, and the extension of features in the project.
 
-### Request Flow Example (Photo Upload)
+## Folder Structure Diagram
 
-1.  A user sends a photo to the Telegram bot.
-2.  The `PhotoUpdate` handler in the `telegram` module receives the message.
-3.  The handler invokes the `PhotoRecognizerAgent`.
-4.  The agent processes the image and uses an AI model to identify the dish.
-5.  The result is sent back to the user, who can then choose to rate the dish.
-6.  If the user rates it, the corresponding `DishLiker` or `DishDisliker` use case in the `profile` module is called.
-7.  The use case executes the domain logic.
-8.  The `FirestoreProfileRepository` (an infrastructure adapter) persists the changes to the database.
+```text
+src/
+├── agents/         # Dish recognition and menu analysis logic
+├── i18n/           # Translation files for internationalization
+├── modules/        # Main business logic, organized by domain (auth, profile, config, shared)
+├── telegram/       # Telegram bot integration, command handlers, guards, and utilities
+├── app.module.ts   # Main application module
+└── main.ts         # Application entry point
+```
 
-## Getting Started
+## Commands
 
-Follow these instructions to get a local copy up and running for development and testing purposes.
+Below are the main bot commands (found in `src/telegram/handlers`). For each command there's a short description, usage examples, and a placeholder where you can add an image showing the command in action.
 
-### Prerequisites
+- /start — Show welcome message and initial instructions
+- /register — Register the user in the service
+- /help — Show help and available commands
+- /allergy <item> — Add an allergy to the user's profile
+- /food <item> | <score> — Rate a food item; score can be 1 (like) or 0 (dislike)
+- /list — Show foods or allergies
+- Photo upload — Send an image; the bot will try to identify the dish and suggest rating options
 
-- [Node.js](https://nodejs.org/) (v20 or higher)
-- NPM or Yarn
-- A **Telegram Bot Token**. You can get one from [BotFather](https://t.me/botfather).
-- **Google Cloud Platform (GCP)** project with **Firestore** enabled. You will need service account credentials (a JSON file).
-- **OpenAI API Key** for the photo recognition agent.
+### /start
 
-### Installation & Configuration
+Description: Welcome message and short instructions.
 
-1.  **Clone the repository:**
+Usage:
 
-    ```bash
-    git clone <repository-url>
-    cd plateid-bot
-    ```
+`/start`
 
-2.  **Install dependencies:**
+Image (add your screenshot here):
 
-    ```bash
-    npm install
-    ```
+![start](images/commands/start.jpg)
 
-3.  **Set up environment variables:**
-    Create a `.env` file in the root of the project and add the following variables. Populate them with your credentials.
+### /register
 
-    ```env
-    # Telegram
-    TELEGRAM_BOT_TOKEN=your_telegram_bot_token
-    # OpenAI
-    OPENAI_API_KEY=your_openai_api_key
-    ```
+Description: Register your Telegram user in the app.
 
-### Running the Application
+Usage:
 
-- **Development mode with auto-reload:**
+`/register`
 
-  ```bash
-  npm run start:dev
-  ```
+Image (add your screenshot here):
 
-- **Production mode:**
+![register](images/commands/register.jpg)
 
-  ```bash
-  # First, build the application
-  npm run build
+### /help
 
-  # Then, start the production server
-  npm run start:prod
-  ```
+Description: Display help text and list of commands.
 
-### Running Tests
+Usage:
 
-- **Run all unit tests:**
+`/help`
 
-  ```bash
-  npm run test
-  ```
+Image (add your screenshot here):
 
-## How It Works
+![help](images/commands/help.jpg)
 
-The bot is designed to be simple and intuitive. You interact with it through a series of commands and by sending a photo of your meal.
+### /allergy
 
-1.  **Start and Register**: Begin by interacting with the bot using the `/start` command, and register yourself with `/register`.
-2.  **Send a Photo**: Take a picture of your food and send it directly to the bot.
-3.  **Get an Answer**: The bot will analyze the image and tell you which dish it has identified and how compatible you are based on your preferences.
-4.  **Manage Preferences**: Use commands like `/allergy <item>` or `/food <item> | <score>` to add foods or allergies to your profile.
+Description: Add or list allergies for your profile.
 
-Here is an example of the bot in action:
+Usage:
 
-![Example](images/example.jpg)
+`/allergy <item>`
 
-![Example](images/example2.jpg)
+Image (add your screenshot here):
+
+![allergy](images/commands/allergy.jpg)
+
+### /food
+
+Description: Rate a food item (like/dislike) or add a food entry.
+
+Usage:
+
+`/food <item> | <score>` (e.g. `/food sushi | 1`)
+
+Image (add your screenshot here):
+
+![food](images/commands/food.jpg)
+
+### /list
+
+Description: Show lists of allergies or foods.
+
+Usage:
+
+`/list`
+
+Image (add your screenshot here):
+
+![list](images/commands/list_allergies.jpg)
+
+![list](images/commands/list_food.jpg)
+
+### Photo upload
+
+### Dish recognition
+
+Description: Send a photo of a meal and the bot will attempt to recognize the dish and present rating / allergy compatibility information.
+
+Usage:
+
+Send an image in chat (no command required) with a caption (**food**).
+![photo](images/commands/food_1.jpg)
+
+Result:
+
+![photo](images/commands/food_2.jpg)
+
+### Menu analysis
+
+Description: Send a photo of a menu and the bot will attempt to analyze it and suggest rating options.
+
+Usage:
+
+Send an image in chat (no command required) with a caption (**menu**).
+![photo](images/commands/menu_1.jpg)
+
+Result:
+
+![photo](images/commands/menu_2.jpg)

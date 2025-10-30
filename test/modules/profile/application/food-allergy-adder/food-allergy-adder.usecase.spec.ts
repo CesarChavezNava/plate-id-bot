@@ -1,32 +1,33 @@
 import { AllergyAdderUseCase } from '@modules/profile/application/allergy-adder/allergy-adder.usecase';
-import { FoodAllergyRepository } from '@modules/profile/domain/repositories/food-allergy.repository';
+import { FoodRatingRepository } from '@modules/profile/domain/repositories/food-rating.repository';
 import { Allergy } from '@modules/profile/domain/entities/allergy';
+import { Food } from '@modules/profile/domain/entities/food';
 import { Test } from '@nestjs/testing';
 
-describe('FoodAllergyAdderUseCase', () => {
+describe('AllergyAdderUseCase', () => {
   let useCase: AllergyAdderUseCase;
-  let foodAllergyRepository: FoodAllergyRepository;
+  let foodRatingRepository: FoodRatingRepository;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
         AllergyAdderUseCase,
         {
-          provide: 'FoodAllergyRepository',
+          provide: 'FoodRatingRepository',
           useValue: {
-            add: jest.fn(),
+            save: jest.fn(),
           },
         },
       ],
     }).compile();
 
     useCase = module.get<AllergyAdderUseCase>(AllergyAdderUseCase);
-    foodAllergyRepository = module.get<FoodAllergyRepository>(
-      'FoodAllergyRepository',
+    foodRatingRepository = module.get<FoodRatingRepository>(
+      'FoodRatingRepository',
     );
   });
 
-  it('should save a food allergy', async () => {
+  it('should save a food allergy as a FoodRating (score 0)', async () => {
     const input = {
       userId: 'user-1',
       foodName: 'Peanuts',
@@ -34,8 +35,8 @@ describe('FoodAllergyAdderUseCase', () => {
 
     await useCase.execute(input);
 
-    expect(foodAllergyRepository.add).toHaveBeenCalledWith(
-      new Allergy(input.userId, input.foodName),
+    expect(foodRatingRepository.save).toHaveBeenCalledWith(
+      Allergy.create(input.userId, Food.create(input.foodName)),
     );
   });
 });

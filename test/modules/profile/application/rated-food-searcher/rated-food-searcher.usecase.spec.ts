@@ -2,6 +2,7 @@ import { RatedFoodSearcherUseCase } from '@modules/profile/application/rated-foo
 import { FoodRatingRepository } from '@modules/profile/domain/repositories/food-rating.repository';
 import { FoodRating } from '@modules/profile/domain/entities/food-rating';
 import { FoodRatingCriteria } from '@modules/profile/domain/entities/food-rating-criteria';
+import { Food } from '@modules/profile/domain/entities/food';
 import { Test } from '@nestjs/testing';
 
 describe('RatedFoodSearcherUseCase', () => {
@@ -27,9 +28,11 @@ describe('RatedFoodSearcherUseCase', () => {
     );
   });
 
-  it('should search for liked dishes', async () => {
-    const input = { userId: 'user-1', rating: 'likes' as const };
-    const expectedRatings = [new FoodRating('user-1', 'Pizza', 'like')];
+  it('should search for rated dishes (no allergies filter)', async () => {
+    const input = { userId: 'user-1', allergies: false };
+    const expectedRatings = [
+      FoodRating.new(input.userId, 5, Food.create('Pizza')),
+    ];
 
     (foodRatingRepository.search as jest.Mock).mockResolvedValue(
       expectedRatings,
@@ -38,14 +41,16 @@ describe('RatedFoodSearcherUseCase', () => {
     const result = await useCase.execute(input);
 
     expect(foodRatingRepository.search).toHaveBeenCalledWith(
-      new FoodRatingCriteria(input.userId, 'like'),
+      new FoodRatingCriteria(input.userId, input.allergies),
     );
     expect(result).toEqual(expectedRatings);
   });
 
-  it('should search for disliked dishes', async () => {
-    const input = { userId: 'user-1', rating: 'dislikes' as const };
-    const expectedRatings = [new FoodRating('user-1', 'Broccoli', 'dislike')];
+  it('should search for rated dishes filtering by allergies', async () => {
+    const input = { userId: 'user-1', allergies: true };
+    const expectedRatings = [
+      FoodRating.new(input.userId, 3, Food.create('Broccoli')),
+    ];
 
     (foodRatingRepository.search as jest.Mock).mockResolvedValue(
       expectedRatings,
@@ -54,7 +59,7 @@ describe('RatedFoodSearcherUseCase', () => {
     const result = await useCase.execute(input);
 
     expect(foodRatingRepository.search).toHaveBeenCalledWith(
-      new FoodRatingCriteria(input.userId, 'dislike'),
+      new FoodRatingCriteria(input.userId, input.allergies),
     );
     expect(result).toEqual(expectedRatings);
   });

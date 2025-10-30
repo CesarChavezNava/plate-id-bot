@@ -3,8 +3,8 @@ import { ProfileRepository } from '@modules/profile/domain/repositories/profile.
 import { Profile } from '@modules/profile/domain/entities/profile';
 import { FoodRating } from '@modules/profile/domain/entities/food-rating';
 import { Allergy } from '@modules/profile/domain/entities/allergy';
+import { Food } from '@modules/profile/domain/entities/food';
 import { ProfileNotFoundError } from '@modules/profile/domain/errors/profile-not-found.error';
-import { ProfileFinderOutput } from '@modules/profile/application/profile-finder/profile.finder.output';
 import { Test } from '@nestjs/testing';
 
 describe('ProfileFinderUseCase', () => {
@@ -30,9 +30,9 @@ describe('ProfileFinderUseCase', () => {
 
   it('should find a profile and return its details', async () => {
     const userId = 'user-1';
-    const likes = [new FoodRating(userId, 'Pizza', 'like')];
-    const dislikes = [new FoodRating(userId, 'Broccoli', 'dislike')];
-    const allergies = [new Allergy(userId, 'Peanuts')];
+    const likes = [FoodRating.new(userId, 5, Food.create('Pizza'))];
+    const dislikes = [FoodRating.new(userId, 1, Food.create('Broccoli'))];
+    const allergies = [Allergy.create(userId, Food.create('Peanuts'))];
     const profile = new Profile(userId, [...likes, ...dislikes], allergies);
 
     (profileRepository.find as jest.Mock).mockResolvedValue(profile);
@@ -40,10 +40,11 @@ describe('ProfileFinderUseCase', () => {
     const result = await useCase.execute({ userId });
 
     expect(profileRepository.find).toHaveBeenCalledWith(userId);
-    expect(result).toBeInstanceOf(ProfileFinderOutput);
+    // current usecase returns a Profile entity
+    expect(result).toBeInstanceOf(Profile);
     expect(result.userId).toBe(userId);
-    expect(result.likes).toEqual(likes);
-    expect(result.dislikes).toEqual(dislikes);
+    // Profile stores food ratings and allergies as FoodRating arrays
+    expect(result.food).toEqual([...likes, ...dislikes]);
     expect(result.allergies).toEqual(allergies);
   });
 
@@ -64,8 +65,8 @@ describe('ProfileFinderUseCase', () => {
 
     const result = await useCase.execute({ userId });
 
-    expect(result.likes).toEqual([]);
-    expect(result.dislikes).toEqual([]);
+    // profile without ratings/allergies should return empty arrays
+    expect(result.food).toEqual([]);
     expect(result.allergies).toEqual([]);
   });
 });

@@ -1,16 +1,17 @@
-import { DishLikerUseCase } from '@modules/profile/application/dish-liker/dish-liker.usecase';
+import { FoodRaterUseCase } from '@modules/profile/application/food-rater/food-rater.usecase';
 import { FoodRatingRepository } from '@modules/profile/domain/repositories/food-rating.repository';
 import { FoodRating } from '@modules/profile/domain/entities/food-rating';
+import { Food } from '@modules/profile/domain/entities/food';
 import { Test } from '@nestjs/testing';
 
-describe('DishLikerUseCase', () => {
-  let useCase: DishLikerUseCase;
+describe('FoodRaterUseCase', () => {
+  let useCase: FoodRaterUseCase;
   let foodRatingRepository: FoodRatingRepository;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
-        DishLikerUseCase,
+        FoodRaterUseCase,
         {
           provide: 'FoodRatingRepository',
           useValue: {
@@ -20,22 +21,19 @@ describe('DishLikerUseCase', () => {
       ],
     }).compile();
 
-    useCase = module.get<DishLikerUseCase>(DishLikerUseCase);
+    useCase = module.get<FoodRaterUseCase>(FoodRaterUseCase);
     foodRatingRepository = module.get<FoodRatingRepository>(
       'FoodRatingRepository',
     );
   });
 
-  it('should save a like food rating', async () => {
-    const input = {
-      userId: 'user-1',
-      foodName: 'Burger',
-    };
+  it('should save a food rating with bounded score and formatted food', async () => {
+    const input = { userId: 'user-1', score: 6, foodName: 'cheeseburger' };
 
-    await useCase.execute(input);
+    await useCase.execute(input as any);
 
     expect(foodRatingRepository.save).toHaveBeenCalledWith(
-      new FoodRating(input.userId, input.foodName, 'like'),
+      FoodRating.create(input.userId, input.score, Food.create(input.foodName)),
     );
   });
 });

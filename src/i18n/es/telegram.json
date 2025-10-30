@@ -9,7 +9,7 @@
     "ERROR": "❌ Oops, ocurrió un error al agregar el platillo."
   },
   "HELP": {
-    "COMMANDS": "/help: Muestra esta lista de comandos.\n/register: Solicita acceso para empezar a usar el bot.\n/like [platillo]: Indica un platillo que te encanta.\n/list likes: Ver tus platillos favoritos.\n/dislike [platillo]: Indica un platillo que NO te gusta.\n/list dislikes: Ver los platillos que no te gustan.\n/allergy [alimento]: Agrega un alimento al que eres alérgico.\n/list allergies: Ver tu lista de alergias."
+    "COMMANDS": "/help: Muestra esta lista de comandos. \n/register: Solicitar acceso para empezar a usar el bot. \n/food [nombre del alimento] | [puntuación]: Califica un platillo del 1 (odio) al 5 (me encanta). \n/list food: Ver todos los platillos que has calificado con sus puntuaciones. \n/allergy [nombre del alimento]: Agrega un alimento al que eres alérgico. \n/list allergies: Ver la lista de alimentos a los que eres alérgico."
   },
   "LIST": {
     "ALLERGIES": "Estas son tus alergias:",
