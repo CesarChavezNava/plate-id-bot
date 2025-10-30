@@ -113,7 +113,7 @@ Usage:
 
 Image (add your screenshot here):
 
-![start](images/commands/start.jpg)
+![start](images/commands/start.JPG)
 
 ### /register
 
