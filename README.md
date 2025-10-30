@@ -95,14 +95,6 @@ src/
 
 Below are the main bot commands (found in `src/telegram/handlers`). For each command there's a short description, usage examples, and a placeholder where you can add an image showing the command in action.
 
-- /start — Show welcome message and initial instructions
-- /register — Register the user in the service
-- /help — Show help and available commands
-- /allergy <item> — Add an allergy to the user's profile
-- /food <item> | <score> — Rate a food item; score can be 1 (like) or 0 (dislike)
-- /list — Show foods or allergies
-- Photo upload — Send an image; the bot will try to identify the dish and suggest rating options
-
 ### /start
 
 Description: Welcome message and short instructions.
@@ -111,7 +103,7 @@ Usage:
 
 `/start`
 
-Image (add your screenshot here):
+Description: Welcome message and short instructions.
 
 ![start](images/commands/start.JPG)
 
@@ -123,8 +115,6 @@ Usage:
 
 `/register`
 
-Image (add your screenshot here):
-
 ![register](images/commands/register.JPG)
 
 ### /help
@@ -134,8 +124,6 @@ Description: Display help text and list of commands.
 Usage:
 
 `/help`
-
-Image (add your screenshot here):
 
 ![help](images/commands/help.JPG)
 
@@ -147,19 +135,15 @@ Usage:
 
 `/allergy <item>`
 
-Image (add your screenshot here):
-
 ![allergy](images/commands/allergy.JPG)
 
 ### /food
 
-Description: Rate a food item (like/dislike) or add a food entry.
+Description: Rate a food item (1(hate)-5(like)) or add a food entry.
 
 Usage:
 
 `/food <item> | <score>` (e.g. `/food sushi | 1`)
-
-Image (add your screenshot here):
 
 ![food](images/commands/food.JPG)
 
@@ -170,8 +154,6 @@ Description: Show lists of allergies or foods.
 Usage:
 
 `/list`
-
-Image (add your screenshot here):
 
 ![list](images/commands/list_allergies.JPG)
 
