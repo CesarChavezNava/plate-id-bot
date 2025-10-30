@@ -125,7 +125,7 @@ Usage:
 
 Image (add your screenshot here):
 
-![register](images/commands/register.jpg)
+![register](images/commands/register.JPG)
 
 ### /help
 
@@ -137,7 +137,7 @@ Usage:
 
 Image (add your screenshot here):
 
-![help](images/commands/help.jpg)
+![help](images/commands/help.JPG)
 
 ### /allergy
 
@@ -149,7 +149,7 @@ Usage:
 
 Image (add your screenshot here):
 
-![allergy](images/commands/allergy.jpg)
+![allergy](images/commands/allergy.JPG)
 
 ### /food
 
@@ -161,7 +161,7 @@ Usage:
 
 Image (add your screenshot here):
 
-![food](images/commands/food.jpg)
+![food](images/commands/food.JPG)
 
 ### /list
 
@@ -173,9 +173,9 @@ Usage:
 
 Image (add your screenshot here):
 
-![list](images/commands/list_allergies.jpg)
+![list](images/commands/list_allergies.JPG)
 
-![list](images/commands/list_food.jpg)
+![list](images/commands/list_food.JPG)
 
 ### Photo upload
 
@@ -186,11 +186,11 @@ Description: Send a photo of a meal and the bot will attempt to recognize the di
 Usage:
 
 Send an image in chat (no command required) with a caption (**food**).
-![photo](images/commands/food_1.jpg)
+![photo](images/commands/food_1.JPG)
 
 Result:
 
-![photo](images/commands/food_2.jpg)
+![photo](images/commands/food_2.JPG)
 
 ### Menu analysis
 
@@ -199,8 +199,8 @@ Description: Send a photo of a menu and the bot will attempt to analyze it and s
 Usage:
 
 Send an image in chat (no command required) with a caption (**menu**).
-![photo](images/commands/menu_1.jpg)
+![photo](images/commands/menu_1.JPG)
 
 Result:
 
-![photo](images/commands/menu_2.jpg)
+![photo](images/commands/menu_2.JPG)
