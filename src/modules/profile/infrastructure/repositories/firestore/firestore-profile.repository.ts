@@ -11,6 +11,7 @@ export class FirestoreProfileRepository implements ProfileRepository {
   constructor(private readonly config: FirestoreService) {}
 
   async find(userId: string): Promise<Profile> {
+    console.log('Buscando perfil de:', userId);
     const profileSnapshot = await this.config.db
       .collection(firestoreCollections.profiles)
       .doc(userId)

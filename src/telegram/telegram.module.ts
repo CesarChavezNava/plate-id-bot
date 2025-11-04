@@ -16,6 +16,7 @@ import {
   TelegrafI18nMiddlewareProvider,
   TelegrafI18nContext,
 } from 'nestjs-telegraf-i18n';
+import { TextUpdate } from './handlers/text.update';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import {
     AllergyUpdate,
     FoodUpdate,
     ListUpdate,
+    TextUpdate,
     PhotoUpdate,
   ],
   exports: [],
