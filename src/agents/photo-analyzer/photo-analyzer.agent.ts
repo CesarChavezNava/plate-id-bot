@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import {
   PhotoAnalyzerState,
   PhotoAnalyzerStateSchema,
-} from './phto-analizer.state';
+} from './phto-analyzer.state';
 import { END, MemorySaver, START, StateGraph } from '@langchain/langgraph';
 import { AIMessage, BaseMessage, HumanMessage, ToolMessage } from 'langchain';
 import { Runnable } from '@langchain/core/runnables';
