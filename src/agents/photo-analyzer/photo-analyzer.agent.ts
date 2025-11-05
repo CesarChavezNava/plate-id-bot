@@ -3,13 +3,20 @@ import { Injectable } from '@nestjs/common';
 import {
   PhotoAnalyzerState,
   PhotoAnalyzerStateSchema,
-} from './phto-analyzer.state';
+} from './photo-analyzer.state';
 import { END, MemorySaver, START, StateGraph } from '@langchain/langgraph';
-import { AIMessage, BaseMessage, HumanMessage, ToolMessage } from 'langchain';
+import {
+  AIMessage,
+  BaseMessage,
+  HumanMessage,
+  SystemMessage,
+  ToolMessage,
+} from 'langchain';
 import { Runnable } from '@langchain/core/runnables';
 import { FindProfileTool } from '@tools/find-profile.tool';
 import { ImageAnalyzerTool } from '@tools/image-analyzer.tool';
 import { OCRMenuExtractorTool } from '@tools/ocr-menu-extractor.tool';
+import { Prompts } from './photo-analyzer.prompts';
 
 type PhotoAnalyzerToolType =
   | FindProfileTool
@@ -35,8 +42,9 @@ export class PhotoAnalizerAgent {
 
     const tools = Object.values(this.toolsByName);
     this.model = new ChatOpenAI({
-      modelName: 'gpt-4o-mini',
+      modelName: 'gpt-5-mini',
       openAIApiKey: process.env.OPENAI_API_KEY,
+      service_tier: 'priority',
     }).bindTools(tools) as Runnable<any, any>;
 
     this.compliledGraph = this.buildGraph();
@@ -163,16 +171,11 @@ export class PhotoAnalizerAgent {
       userId: userId,
       imageReference: urlImage,
       messages: [
+        new SystemMessage(Prompts.system()),
         new HumanMessage([
           {
             type: 'text',
-            text: `Tu objetivo es generar una recomendación de comida para el usuario ${userId} basada en la imagen. 
-                    
-                    Sigue esta secuencia estricta de tareas usando las herramientas disponibles:
-                    1.  **Perfil:** Ejecuta la herramienta 'find_profile' con el input ${userId}.
-                    2.  **Visión:** Después de obtener el perfil, ejecuta la herramienta 'analyze_image_content' con el input '${urlImage}'.
-                    3.  **OCR Condicional:** Evalúa el resultado JSON de 'analyze_image_content'. Si el campo 'needs_ocr' es TRUE, DEBES ejecutar la herramienta 'extract_text_ocr' con el input '${urlImage}'. Si 'needs_ocr' es FALSE, ignora este paso.
-                    4.  **Decisión Final:** Con todos los datos disponibles (perfil, análisis de visión, y texto OCR si se ejecutó), compara las preferencias del usuario (alergias, scores) con el contenido detectado. Genera una respuesta amigable con una **recomendación CLARA y personalizada** (ej. "Te recomiendo... no lo pidas, choca con tu alergia...").`,
+            text: Prompts.human(userId, urlImage),
           },
         ]),
       ],
@@ -184,7 +187,6 @@ export class PhotoAnalizerAgent {
       },
     };
 
-    console.log('Ejecutando agente...', initialState.userId);
     const result = await this.compliledGraph.invoke(initialState, config);
 
     const lastMessage = result.messages?.at(-1);
@@ -192,6 +194,6 @@ export class PhotoAnalizerAgent {
       return lastMessage.content;
     }
 
-    return 'El agente terminó el flujo de trabajo, pero no se pudo extraer una respuesta final de texto.';
+    return '¡Se armó el relajo! Algo falló en la última respuesta del agente.';
   }
 }
