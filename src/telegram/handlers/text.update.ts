@@ -1,30 +1,48 @@
-import { PhotoAnalizerAgent } from '@agents/photo-analyzer/photo-analyzer.agent';
 import { Ctx, On, Update } from 'nestjs-telegraf';
 import { AccessVerifierGuard } from '../guards/access-verifier.guard';
 import { UseGuards } from '@nestjs/common';
 import { Context } from 'telegraf';
+import { MetaState } from '@agents/meta/meta.state';
+import { MetaAgent } from '@agents/meta/meta.agent';
+import { HumanMessage } from '@langchain/core/messages';
 
 @Update()
 export class TextUpdate {
-  constructor(private readonly agent: PhotoAnalizerAgent) {}
+  constructor(private readonly metaAgent: MetaAgent) {}
 
   @UseGuards(AccessVerifierGuard)
   @On('text')
   async handleText(@Ctx() ctx: Context) {
     const userId = ctx.from.id.toString();
+    const userQuery = ctx.message['text'];
 
-    await ctx.telegram.sendChatAction(ctx.chat.id, 'typing');
+    ctx.telegram.sendChatAction(ctx.chat.id, 'typing');
 
     try {
-      console.log('Ejecutando agente...', userId);
-      // 1. Ejecutar el agente. agentResponse ahora es un simple string.
-      const agentResponse: string = await this.agent.run(userId, ''); // ⬅️ Respuesta simple (string)
+      const lastFoodAnalyzed = await this.loadLastFoodAnalyzed(userId);
 
-      // 2. Responder directamente
-      await ctx.reply(agentResponse); // ⬅️ No se requiere extracción ni validación de tipos
-    } catch (error) {
-      console.error('Error durante la ejecución del agente:', error);
-      await ctx.reply('⚠️ Error interno al contactar al Agente de IA.');
+      const initialState: MetaState = {
+        userId: userId,
+        lastFoodAnalyzed: lastFoodAnalyzed,
+        messages: [new HumanMessage(userQuery)],
+      };
+
+      const agentResponse = await this.metaAgent.run(initialState);
+
+      await ctx.reply(agentResponse, { parse_mode: 'Markdown' });
+    } catch (err) {
+      console.error('Error while processing text for agent:', err);
+      await ctx.reply('¡Ay, nanita! Hubo un error procesando tu mensaje.');
     }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private async loadLastFoodAnalyzed(_: string): Promise<string | null> {
+    // Aquí harías una llamada a tu checkpointer o base de datos:
+    // const state = await this.metaAgent.getCheckpointer().load(userId);
+    // return state?.lastFoodAnalyzed || null;
+
+    // Retorno hardcodeado para ejemplo:
+    return null;
   }
 }

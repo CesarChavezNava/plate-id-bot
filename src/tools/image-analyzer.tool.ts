@@ -39,8 +39,9 @@ export class ImageAnalyzerTool extends Tool {
     super();
 
     this.model = new ChatOpenAI({
-      modelName: 'gpt-4o-mini',
+      modelName: 'gpt-5-mini',
       openAIApiKey: process.env.OPENAI_API_KEY,
+      service_tier: 'priority',
     }).withConfig({
       response_format: { type: 'json_object' },
     });

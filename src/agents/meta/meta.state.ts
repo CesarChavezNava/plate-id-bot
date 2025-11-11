@@ -1,14 +1,16 @@
-import { BaseMessageSchema } from '@agents/shared/base-messages';
 import * as z from 'zod';
 
-export const PhotoAnalyzerStateSchema = z.object({
+import { BaseMessageSchema } from '@agents/shared/base-messages';
+
+export const MetaStateSchema = z.object({
   userId: z.string().describe('ID de la sesión del usuario.'),
   messages: z
     .array(BaseMessageSchema)
     .describe('Historial de la conversación y observaciones de herramientas.'),
   imageReference: z
     .string()
-    .describe('URL o ID de la imagen para su procesamiento.'),
+    .describe('URL o ID de la imagen para su procesamiento.')
+    .optional(),
   profileContent: z
     .string()
     .describe(
@@ -19,6 +21,7 @@ export const PhotoAnalyzerStateSchema = z.object({
     .string()
     .optional()
     .describe('El mensaje final formateado para mostrar al usuario.'),
+  lastFoodAnalyzed: z.string().nullable(),
 });
 
-export type PhotoAnalyzerState = z.infer<typeof PhotoAnalyzerStateSchema>;
+export type MetaState = z.infer<typeof MetaStateSchema>;

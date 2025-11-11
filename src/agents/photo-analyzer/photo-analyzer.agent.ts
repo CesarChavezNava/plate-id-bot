@@ -42,9 +42,8 @@ export class PhotoAnalizerAgent {
 
     const tools = Object.values(this.toolsByName);
     this.model = new ChatOpenAI({
-      modelName: 'gpt-5-mini',
+      modelName: 'gpt-4o-mini',
       openAIApiKey: process.env.OPENAI_API_KEY,
-      service_tier: 'priority',
     }).bindTools(tools) as Runnable<any, any>;
 
     this.compliledGraph = this.buildGraph();

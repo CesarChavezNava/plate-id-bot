@@ -40,10 +40,8 @@ describe('ProfileFinderUseCase', () => {
     const result = await useCase.execute({ userId });
 
     expect(profileRepository.find).toHaveBeenCalledWith(userId);
-    // current usecase returns a Profile entity
     expect(result).toBeInstanceOf(Profile);
     expect(result.userId).toBe(userId);
-    // Profile stores food ratings and allergies as FoodRating arrays
     expect(result.food).toEqual([...likes, ...dislikes]);
     expect(result.allergies).toEqual(allergies);
   });
@@ -65,7 +63,6 @@ describe('ProfileFinderUseCase', () => {
 
     const result = await useCase.execute({ userId });
 
-    // profile without ratings/allergies should return empty arrays
     expect(result.food).toEqual([]);
     expect(result.allergies).toEqual([]);
   });
